@@ -1,0 +1,92 @@
+AWS cloud server
+S3 database
+
+Resources on AWS
+•	Description
+Light Every Night dataset of all VIIRS DNB and DMSP-OLS nighttime satellite data
+Resource type
+S3 Bucket
+Amazon Resource Name (ARN)
+arn:aws:s3:::globalnightlight
+AWS Region
+us-east-1
+AWS CLI Access (No AWS account required)
+aws s3 ls s3://globalnightlight/ --no-sign-request
+
+
+Light Every Night file structure
+
+The data for both DMSP-OLS and VIIRS-DNB are in the root AWS S3 bucket, s3://globalnightlight/. 
+DMSP-OLS data are organized into directories by satellite name and year. 
+VIIRS-DNB data are organized by month until 2017 and by satellite name and month starting in 2018 when data from two satellites (NPP and NOAA-20/J01) became available.
+
+
+
+
+
+
+
+
+
+Accessing S3 database by using S3 command.
+
+I have created a Linux instance for accessing this S3 database. Then I have used S3 command to view this globalnightlight file and there are massive files under this path.
+I have distributed them to three types of them. 
+
+The first type of file is name by year and month, like 201204,201205….201603. There are many .tif files or .OIS files that were stored.
+
+ 
+
+
+
+
+
+
+
+The second part is DMSP-OLS data which are named from DMSP satellites. The file name was generated from satellite’s name and year. Like F101992, which means the data was collected by satellite F10 in 1992. There are many files from 1992 to 2013 that can be used by public.
+
+ 
+
+The structure of DMSP-OLS
+DMSP-OLS
+F12199501010014.night.OIS
+F12 -> satellite name
+   1995 -> year at start of orbital segment
+       01 -> month at start of orbital segment
+         01 -> day of month at start of orbital segment
+           00 -> hour of day at start of orbital segment
+             14 -> minute of hour at start of orbital segment
+               .night -> orbit is cropped to only nighttime data
+                     .OIS -> acronym for OLS Interleaved Smooth
+
+Here is an additional picture to understanding the link between year and satellites.
+
+ 
+The third part was called npp_201801. The reason why they call it npp_year+month is because the data collection from VIIRS-DNB( the following DMSP-OLS sensor). It have some difference between DMSP.
+ 
+File structure:
+npp_d20150504_t1335358_e1341162_b18219
+npp -> satellite ID
+    d20150504 -> start date of first scan in aggregate (2015/05/04)
+              t1335358 -> time of first scan (13:35:35.8)
+                       e1341162 -> time of last scan (13:41:16.2)
+                                b18219 -> orbit number of first scan
+File structure:
+
+SVDNB_npp_d20150504_t1335358_e1341162_b18219_c20150504194116381040_noaa_ops
+SVDNB -> Day/Night Band SDR (all possible product IDs are listed below)
+      npp_d20150504_t1335358_e1341162_b18219 -> aggregate identifier
+                  C20150504194116381040 -> creation date/time of SDR
+                                        noaa -> data origin
+                                             ops -> data domain
+
+
+
+
+
+
+IAM and create my own S3 buket
+
+I have used IAM to create a role in order to make a policy to access the S3 bucket then I have used S3 cp command to add to my s3 bucket in order to download in my computer.
+
+
