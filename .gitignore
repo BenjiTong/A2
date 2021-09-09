@@ -208,3 +208,4 @@ paper/document.bcf
 paper/document.pdf
 paper/document.run.xml
 paper/document.synctex.gz
+.DS_Store

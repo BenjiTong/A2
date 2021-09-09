@@ -411,7 +411,7 @@ some libaries providing these functions but mostly are from external part.
 \subsection{CloudFormation}
 
 CloudFormation is a service in AWS, which can organize services very quickly and configure them by yaml or json. There area
-several templates for provisioning different services. It is more convient than Ansible for some services. In this project, 
+several templates for provisioning different services. It is more convenient than Ansible for some services. In this project, 
 RDS and Lambda Services are dependent on it.
 
 \subsection{Nginx/Tomcat}
@@ -645,7 +645,7 @@ manage spatial data collections, and can be extended to customize domains. Final
 unique pipeline for each different data set they use.
 
 
-\subsection{imagery processing in AWS}
+\subsection{Imagery processing in AWS}
 
 The pictures in S3 are based on two essential formats, which is STAC and COG. The satellites generate them everyday. 
 World Bank organized the global night lights project to store these files in S3. When it comes to deal with the satellite 
@@ -655,7 +655,7 @@ It is integrated with Python very well, and is very good at reading and writing 
 
 \begin{figure}[htbp]
     \centerline{\includegraphics[width=260pt]{images/dataprocess.png}}
-    \caption{imagery processing in AWS}
+    \caption{Imagery processing in AWS}
     \label{fig4}
 \end{figure}
 
@@ -689,7 +689,7 @@ had already experienced this method. This iterative approach towards the complet
 
 It is important that some tools let the team work like a native team. All of the team members are from China, but nobody knew each other before. 
 So at the first day, the IM platform named Lark, which was widely used in the work place in China, was chosen by team members. Java is the first 
-language in the team because team members are almost good at it. By Github, all of the codes can be easily shared with members and easily taken 
+language in the team because team members are almost good at it. By Github, all of the code can be easily shared with members and easily taken 
 control of its version. Remote cooperation is not a easy thing, so team members create a event for vedio meeting everyday. At the same time, it 
 is also the agile standup meeting everyday. With the development and research process, some members have to stop to learn more things about the 
 lack of relative knowledge. For example, none of members are good at some key technologies, such as geospatial imagery processing, Vue, AWS usage. 
@@ -703,53 +703,82 @@ result would be bad at that aspect. At that time, the role of scrum master was v
 \section{Security Considerations}
 
 Secruity is the important thing in the development. Although some services can enhance the security, but they are usually very expensive, for example, 
-NAT can islote the safer network. There are a lot of details contributing to the security together.
+NAT can isolate the safer network. There are a lot of details contributing to the security together.
 
 \subsection{IAM}
 
+IAM is the first protection in this project. All of members' accounts opened the MFA login to ensure the account security and avoided using the root user. 
+All of the accounts used by code are disabled the password login ability because they are no need to use the console. 
+
+The team is divided into various different roles such as backend engineers, frontend engineers, 
+testing, project managers, DBA. And all of the members would belong to one or more roles as Fig.~\ref{roles}. 
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/roles.png}}
+    \caption{Roles in the team}
+    \label{roles}
+\end{figure}
+
+
+Every role is attached the least privileges that is provided by AWS policies. As for project managers, role of A2PM is a administrator role. So it is 
+attached the AdministratorAccess policy. A2DBA is attached AmazonRDSFullAccess policy, which is used by database administrator. A2Backend is attached 
+AmazonRDSReadOnlyAccess and AmazonEC2ContainerServiceRole policies, which is used by backend engineers. A2Frontend is attached AmazonEC2ContainerServiceforEC2Role 
+policy and A2testing is attached AmazonEC2ReadOnlyAccess policy.All the roles can protect the cloud environment and keep the least privilege. Practically, it is 
+a little bit complicated for a small team, but it is useful especially when someone's credentials exposure at Github. And for the high privileges, only 
+limited role can visit the sensitive resources, for example, project managers can visit almost all of the resources.
+
+Some roles are generated for the specific service. For example, there is a role named ec2callsecretsmanager. It is attached the SecretsManagerReadWrite 
+policy, which is used for a EC2 instance to visit the Secrets Manager service in AWS. It is a good method to hide the original password in the code and a 
+convenient approach to get the privilege from one service to another service without any code.
+
+\subsection{Customer data}
+
+
 \subsection{Network}
 
-\subsection{Customer}
+To build a relative safe network, there are 3 steps. The first step is to isolate the public IP instances with others by subnet. In entire network design, 
+ELB and deployment EC2 are the only two points that having public IP address. This step can protect all of the services against attack even though some vulnerability 
+would be existed in some instances.
 
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/subnet.png}}
+    \caption{Subnet}
+    \label{subnet}
+\end{figure}
+
+The second step is the sbunet design, which is shown as Fig.~\ref{subnet}. There are there different subnets using for services in different layers. And also, 
+these subnet configurations help the step one to isolate the public network environment. The subnets named Intranet2 and Intranet3 are the isolated frontend 
+instances. The benefit of this design is isolate the same functions into different partitions. When a part of entire demo are hacked, it is easy 
+to close this part to avoid more damage. The third subnet is the core subnet which is connected with database.
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/security.png}}
+    \caption{Security groups}
+    \label{Security}
+\end{figure}
+
+The last step is to configure the security groups for step 1 and 2. In this demo, 3 zones are divided for 3 subnets, which is shown as Fig.~\ref{Security}. The inbound 
+rules of zone A and B allows port 80, which is the http service port connected by ELB in front of them. The inbound of zone C allows port 8080, which is the Tomcat 
+service port connected by instances in the zone A and B. And the outbound allows port 3306, which is the Mysql service port.
+
+After these 3 steps, the network environment isolates all the services very well. It is the fundamental protection.
+
+\section{Actual AWS expenditure}
 
 
 \section{Team members and individual contribution within the team}
 \begin{itemize}
-    \item Zhen Chen:  PM, BE, DevOps
+    \item Zhen Chen: PM, BE, DevOps. Scrum master. Designed the entire backend architecture. Implemented all the imagery processing Python code. Implemented all the deployment code. 
+    Implemented part of the backend Java code. 
+    
+    Writing contribution includs: The previous 8 paragraphs of solution summary, and H, I, J, K subsections in it. The A, E, G subsections of proposed solution. The A, C 
+    subsections of security Considerations. The section of actual AWS expenditure.
+
     \item Huajie Xu: FE
-    \item Shengzhu Wang(Simon): BE
+    \item Shengzhu Wang(Simon): BE. Implemented part of the backend Java code. Quited the team early without participating in writing.
     \item SiXiang Xiong(Tom): BE, Testing
     \item Wenjie Tong: Data Researcher, Testing
 \end{itemize}
-
-
-\subsection{Figures and Tables}
-
-Use the abbreviation 
-``Fig.~\ref{fig}'', even at the beginning of a sentence.
-
-\begin{table}[htbp]
-\caption{Table Type Styles}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
-\cline{2-4} 
-\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
-\hline
-copy& More table copy$^{\mathrm{a}}$& &  \\
-\hline
-\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
-\end{tabular}
-\label{tab1}
-\end{center}
-\end{table}
-
-\begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
-\caption{Example of a figure caption.}
-\label{fig}
-\end{figure}
   
 \printbibliography
 
