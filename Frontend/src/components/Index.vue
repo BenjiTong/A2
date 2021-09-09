@@ -60,7 +60,7 @@
                             "
                         >
                             <ul class="menu-vertical">
-                                <li class="h4">{{ username }}</li>
+                                <li class="h4">{{ usrname }}</li>
                                 <li>
                                     <input
                                         type="button"
@@ -173,7 +173,7 @@ export default {
                 }
             ], */
             isSideMenuShowing: false,
-            username: 'username',
+            usrname: '',
             selectedArea: 2,
             pickedMode: -1,
             options: [
@@ -191,10 +191,29 @@ export default {
             event.stopPropagation()
         },
         signout () {
-            // signout logic
-            // send message to server
-            sessionStorage.removeItem('token')
-            this.$router.push({ name: 'Login' })
+            let storage
+            if (this.$global.tokenStorageType === 0) {
+                storage = sessionStorage
+            } else {
+                storage = localStorage
+            }
+            if (storage.getItem('token')) {
+                let api = this.$global.apiHead + '/oauth/quit'
+                this.$http.post(api + ('?' + this.$querystring.stringify({
+                    token: storage.getItem('token'),
+                    state: this.$global.state
+                }))).then((response) => {
+                    console.log(response.body)
+                    storage.removeItem('token')
+                    storage.removeItem('usrname')
+                    this.$router.push({ name: 'Login' })
+                }, (response) => {
+                    console.error(response)
+                    // this.$router.push({ name: 'Login' })
+                })
+            } else {
+                this.$router.push({ name: 'Login' })
+            }
         },
         resolveOriginData (index, originData) {
             if (this.data[index].lineChart != null) return
@@ -282,6 +301,26 @@ export default {
         }, (response) => {
             console.error(response)
         })
+        this.$http.get('/awselb/city?id=1').then((response) => {
+            console.log(response.body)
+            this.resolveOriginData(1, response.body)
+        }, (response) => {
+            console.error(response)
+        })
+        this.$http.get('/awselb/city?id=0').then((response) => {
+            console.log(response.body)
+            this.resolveOriginData(0, response.body)
+        }, (response) => {
+            console.error(response)
+        })
+
+        let storage
+        if (this.$global.tokenStorageType === 0) {
+            storage = sessionStorage
+        } else {
+            storage = localStorage
+        }
+        this.usrname = storage.getItem('usrname')
     },
     components: {
         MyFooter,

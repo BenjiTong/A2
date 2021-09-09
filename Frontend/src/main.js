@@ -11,25 +11,46 @@ import '@/assets/css/custom.css'
 
 // premise
 import VueResource from 'vue-resource'
+import global from './global.js'
 Vue.prototype.$querystring = querystring
 Vue.use(VueResource)
 
 Vue.config.productionTip = false
+Vue.http.options.emulateJSON = true
+
+// global setting
+Vue.prototype.$global = global
 
 /* eslint-disable no-new */
 
-function fakeAuth () {
-    if (sessionStorage['token'] != null) {
-        return true
-    } else {
-        return false
-    }
-}
-
 router.beforeEach((to, from, next) => {
-    if (to.meta.requireAuth && !fakeAuth()) {
-        // Check login state
-        next({ path: '/login' })
+    if (to.matched.some(m => m.meta.requireAuth)) { // if need login
+        if (to.name === 'Login') {
+            next()
+        } else {
+            let token
+            if (global.tokenStorageType === 0) {
+                token = sessionStorage.getItem('token')
+            } else {
+                token = localStorage.getItem('token')
+            }
+            if (token != null) {
+                Vue.http.post(global.apiHead + '/oauth/islogin', { token, state: global.state }).then((response) => {
+                    console.log(response.body)
+                    if (response.body.r === 'OK') {
+                        next()
+                    } else {
+                        alert('r: ' + response.body.r)
+                        next('/Login')
+                    }
+                }, (response) => {
+                    alert(response)
+                    next('/Login')
+                })
+            } else {
+                next('/Login')
+            }
+        }
     } else {
         next()
     }

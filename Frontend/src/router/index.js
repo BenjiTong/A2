@@ -6,6 +6,7 @@ import Redirect from '@/components/Redirect'
 import TestD3 from '@/components/TestD3'
 import MultiLineChart from '@/components/MultiLineChart'
 import TestEmptyPage from '@/components/TestEmptyPage'
+import WorldMap from '@/components/WorldMap'
 
 Vue.use(Router)
 
@@ -44,6 +45,11 @@ export default new Router({
             path: '/test/empty',
             name: 'TestEmptyPage',
             component: TestEmptyPage
+        },
+        {
+            path: '/test/world',
+            name: 'WorldMap',
+            component: WorldMap
         }
     ]
 })

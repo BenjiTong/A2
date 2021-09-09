@@ -1,0 +1,35 @@
+Vue
+Vue is a progressive framework, which is perfectly capable of powering sophisticated Single-Page Applications when used in combination with modern tooling and supporting libraries (Vue.js). In fact, Vue is used for two main reasons. Firstly, with Vue, the server-side code can be effectively decoupled from the front-end UI which means back-end and front-end teams can focus on doing their jobs. And second one is because all members of our group are inexperienced in constructing front-end. Therefore, the front-end framework we need should be easy to get started and has a straight forward learning curve, which is one of Vue’s characteristic. That is also why these years saw its hot upward trend in GitHub stars number.
+
+D3
+Fundamentally, D3 is a JavaScript library for creating data visualizations, an elegant piece of software that facilitates generation and manipulation of web documents with data (S. Murray, 2013). Our solution can demonstrate potential business value only if all the data processed by Lambda can be vividly presented to users. By the way, it can be easily imported to Vue because they all base on JavaScript.
+
+Frontend construction
+1.	NVM
+“NVM (Node Version Manager) is a version manager for node.js, designed to be installed per-user, and invoked per-shell” (nvm.sh). With it, it is possible to manage multiple versions of node.js in same machine.
+2.	NPM
+“NPM is the world's largest software registry. Open source developers from every continent use NPM to share and borrow packages, and many organizations use NPM to manage private development as well” (npmjs). Since NPM is the default package manager for the node.js, so Vue, webpack and other dependencies can be installed or uninstalled by it.
+3.	Native Vue or Webpack
+“At its core, webpack is a static module bundler for modern JavaScript applications. When webpack processes your application, it internally builds a dependency graph from one or more entry points and then combines every module your project needs into one or more bundles, which are static assets to serve your content from” (Webpack). Not only Vue but also other frameworks like React, Angular depend on webpack to build boilerplates.
+4.	Vue cli
+“A simple CLI for scaffolding Vue.js projects” (Vuejs). With it, user can pull
+template from vuejs-templates and generate the basic webpack + Vue project.
+
+Frontend function
+There are two main tasks of frontend, third party login and data visualization.
+1.	Third party login
+At present, we have implemented third party login by GitHub. Frontend will redirect to GitHub webpage to let user get authenticated by GitHub to get assertion, which is practically a temporary code. Then frontend will provide this code to service provider, which is ELB in our solution, to exchange for token to complete whole authenticating process. All API are used securely according to official documents (GitHub Docs).
+
+2.	Data visualization 
+For three specific research-targeting areas ,The data format is just like (images/Data_format_frontend_get). It is an array in which each element shows lots of details of one section of COG file at a particular time point. Because each time the section, also showed as “window” in the image, is different from each other, so directly comparing “radiance” of each element is meaningless. To show the level of night lights of different area, “radiance” divided by “pixels” is more valuable since it has nothing to do with the size of “window”.
+ 
+Line chart (images/Line_chart) is very suitable for showing the trend of a series of data changing over time. In order to provide more information, user can click the check buttons above the chart to see annual averages, monthly averages and daily averages of radiance per pixel. 
+
+Reference list
+1.	Vue.js. Introduction. https://vuejs.org/v2/guide/
+2.	S. Murray. (2013). Interactive Data Visualization for the Web
+3.	nvm.sh. Node Version Manager. https://github.com/nvm-sh/nvm
+4.	npmjs. About npm. https://docs.npmjs.com/about-npm
+5.	Webpack. Concepts. https://webpack.js.org/concepts/
+6.	Vuejs. Vue-cli. https://github.com/vuejs/vue-cli/tree/v2#vue-cli--
+7.	GitHub Docs. Authorizing OAuth Apps.https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps
