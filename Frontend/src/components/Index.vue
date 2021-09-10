@@ -126,6 +126,14 @@
                     </div>
                 </div>
                 <div class="masonry__container row masonry--active">
+                    <div class="masonry__item col-md-4 col-12 filter-filter-1">
+                        <my-props-world-map ref="worldMap"></my-props-world-map>
+                        <span class="h4 inline-block">Title</span>
+                        <span>Detailed Description</span>
+                    </div>
+                    <p
+                        class="masonry__item col-md-1 col-12 filter-filter-1"
+                    ></p>
                     <div class="masonry__item col-md-6 col-12 filter-filter-1">
                         <my-props-line-chart
                             ref="lineChart"
@@ -143,6 +151,7 @@
 <script>
 import MyFooter from '@/components/Footer'
 import MyPropsLineChart from '@/components/PropsMultiLineChart'
+import MyPropsWorldMap from '@/components/PropsWorldMap'
 
 export default {
     data: function () {
@@ -243,8 +252,12 @@ export default {
                     yearMap.set(strYear, { radiance: +d.radiance, pixels: +d.pixels })
                 }
             })
-            console.log(monthMap)
-            console.log(yearMap)
+
+            // sort by key
+            dayMap = this.sortMapByKey(dayMap)
+            monthMap = this.sortMapByKey(monthMap)
+            yearMap = this.sortMapByKey(yearMap)
+
             let dayData = {
                 y: 'radiance / pixels',
                 series: [{ name: this.options[index].text, values: [] }],
@@ -282,6 +295,19 @@ export default {
             if (this.pickedMode >= 0 && this.data[this.selectedArea].lineChart != null) {
                 this.$refs.lineChart.resetData(this.data[this.selectedArea].lineChart[this.pickedMode])
             }
+        },
+        sortMapByKey (originMap) {
+            let originArray = Array.from(originMap)
+            originArray.sort(function compare (a, b) {
+                if (a[0] < b[0]) {
+                    return -1
+                }
+                if (a[0] > b[0]) {
+                    return 1
+                }
+                return 0
+            })
+            return new Map(originArray.map(d => [d[0], d[1]]))
         }
     },
     watch: {
@@ -324,7 +350,8 @@ export default {
     },
     components: {
         MyFooter,
-        MyPropsLineChart
+        MyPropsLineChart,
+        MyPropsWorldMap
     }
 }
 </script>
