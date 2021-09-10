@@ -24,7 +24,7 @@ Vue.prototype.$global = global
 /* eslint-disable no-new */
 
 router.beforeEach((to, from, next) => {
-    if (!global.ifNeedLogin) { next() } // just for test, skip the login process
+    if (!global.ifNeedLogin) next() // just for test, skip the login process
     else {
         if (to.matched.some(m => m.meta.requireAuth)) { // if need login
             if (to.name === 'Login') {
