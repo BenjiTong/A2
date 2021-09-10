@@ -510,14 +510,14 @@ from 1992 to 2013 that can be used by the public.
 This picture is showing lots of folders of nighttime data.  In those folders, there are tons of.OIS files. 
 For example: F12199501010014.night.OIS 
 
-F12 -> satellite name \\
-1995 -> year at start of orbital segment \\
-01 -> month at start of orbital segment \\
-01 -> day of month at start of orbital segment \\
-00 -> hour of day at start of orbital segment \\
-14 -> minute of hour at start of orbital segment \\
-.night -> orbit is cropped to only nighttime data \\
-.OIS -> acronym for OLS Interleaved Smooth \\
+F12 \-\> satellite name \\
+1995 \-\> year at start of orbital segment \\
+01 \-\> month at start of orbital segment \\
+01 \-\> day of month at start of orbital segment \\
+00 \-\> hour of day at start of orbital segment \\
+14 \-\> minute of hour at start of orbital segment \\
+.night \-\> orbit is cropped to only nighttime data \\
+.OIS \-\> acronym for OLS Interleaved Smooth \\
 
 All those details about this file are giving more information for users to understand how the data be stored in the AWS database server. 
 
@@ -734,6 +734,14 @@ convenient approach to get the privilege from one service to another service wit
 
 \subsection{Customer data}
 
+\subsubsection{Step 1. Identify \& Category}
+
+\subsubsection{Step 2. High level: who can access}
+  
+\subsubsection{Step 3. Policy from cloud IAM}
+
+\subsubsection{Step 4.what is more}
+
 
 \subsection{Network}
 
@@ -766,17 +774,17 @@ After these 3 steps, the network environment isolates all the services very well
 
 \section{Actual AWS expenditure}
 
+Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 accounted 20 percent. RDS accounted 30 percent.
 
 \section{Team members and individual contribution within the team}
 \begin{itemize}
     \item Zhen Chen: PM, BE, DevOps. Scrum master. Designed the entire backend architecture. Implemented all the imagery processing Python code. Implemented all the deployment code. 
     Implemented part of the backend Java code. 
     
-    Writing contribution includs: The previous 8 paragraphs of solution summary, and H, I, J, K subsections in it. The A, E, G subsections of proposed solution. The A, C 
-    subsections of security Considerations. The section of actual AWS expenditure.
+    Writing contribution includs: The previous 8 paragraphs of solution summary, and H, I, J, K subsections in it. The A, E, G subsections of proposed solution. The section of security Considerations. The section of actual AWS expenditure.
 
     \item Huajie Xu: FE
-    \item Shengzhu Wang(Simon): BE. Implemented part of the backend Java code. Quited the team early without participating in writing.
+    \item Shengzhu Wang(Simon): BE. Implemented part of the backend Java code. Quit the team early without participating in writing.
     \item SiXiang Xiong(Tom): BE, Testing
     \item Wenjie Tong: UI designer,Data Researcher, Testing.
     In my part of this project, I am playing a role of UI designer,Data Researcher and function tester. 
