@@ -24,35 +24,38 @@ Vue.prototype.$global = global
 /* eslint-disable no-new */
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(m => m.meta.requireAuth)) { // if need login
-        if (to.name === 'Login') {
-            next()
-        } else {
-            let token
-            if (global.tokenStorageType === 0) {
-                token = sessionStorage.getItem('token')
+    if (!global.ifNeedLogin) next() // just for test, skip the login process
+    else {
+        if (to.matched.some(m => m.meta.requireAuth)) { // if need login
+            if (to.name === 'Login') {
+                next()
             } else {
-                token = localStorage.getItem('token')
-            }
-            if (token != null) {
-                Vue.http.post(global.apiHead + '/oauth/islogin', { token, state: global.state }).then((response) => {
-                    console.log(response.body)
-                    if (response.body.r === 'OK') {
-                        next()
-                    } else {
-                        alert('r: ' + response.body.r)
+                let token
+                if (global.tokenStorageType === 0) {
+                    token = sessionStorage.getItem('token')
+                } else {
+                    token = localStorage.getItem('token')
+                }
+                if (token != null) {
+                    Vue.http.post(global.apiHead + '/oauth/islogin', { token, state: global.state }).then((response) => {
+                        console.log(response.body)
+                        if (response.body.r === 'OK') {
+                            next()
+                        } else {
+                            alert('r: ' + response.body.r)
+                            next('/Login')
+                        }
+                    }, (response) => {
+                        alert(response)
                         next('/Login')
-                    }
-                }, (response) => {
-                    alert(response)
+                    })
+                } else {
                     next('/Login')
-                })
-            } else {
-                next('/Login')
+                }
             }
+        } else {
+            next()
         }
-    } else {
-        next()
     }
 })
 
