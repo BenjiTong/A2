@@ -153,7 +153,7 @@ public class GithubLogController {
         logger.debug("用户信息===:" + userinfo_url);
         Map<String, String> header = new HashMap<>();
         header.put("Authorization", "token " + token);
-        responseStr = http.doGetForStringByHeader("https://api.github.com/user/repos", header);
+        responseStr = http.doGetForStringByHeader(userinfo_url, header);
 
         // model.addAttribute("userInfo", JSONArray.parse(responseStr));
         // model.addAttribute("token", token);
