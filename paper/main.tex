@@ -102,7 +102,7 @@ The architecture of our solution is shown as Fig.~\ref{fig2}. Both of security a
 was used for the essential network design. But after two days, NAT had to close because of the budget alert. But it is neccessary that hiding the 
 internal services into the internal network instead of exposing them to the internet.
 
-There are two important methods to keep the passowrd safely. The first one is IAM role. IAM role provides good security protection in the whole structure.
+There are two important methods to keep the password safely. The first one is IAM role. IAM role provides good security protection in the whole structure.
 Different IAM roles are generated to attach to different Lambda functions. The execution roles are granted permission of access to necessary AWS services. 
 There are some common policies for them, e.g. AWSLambdaBasicExecutionRole and AmazonS3FullAccess policies. The second one is Secrets Manager service in AWS.
 All of the passwords in this project are stored in it. Visiting it through Secrets Manager when needed.
@@ -706,7 +706,7 @@ result would be bad at that aspect. At that time, the role of scrum master was v
 Secruity is the important thing in the development. Although some services can enhance the security, but they are usually very expensive, for example, 
 NAT can isolate the safer network. There are a lot of details contributing to the security together.
 
-\subsection{IAM}
+\subsection{Identity and Access management}
 
 IAM is the first protection in this project. All of members' accounts opened the MFA login to ensure the account security and avoided using the root user. 
 All of the accounts used by code are disabled the password login ability because they are no need to use the console. 
@@ -720,28 +720,66 @@ testing, project managers, DBA. And all of the members would belong to one or mo
     \label{roles}
 \end{figure}
 
-
-Every role is attached the least privileges that is provided by AWS policies. As for project managers, role of A2PM is a administrator role. So it is 
+Every role is attached the least privileges which is provided by AWS policies. As for project managers, role of A2PM is a administrator role. So it is 
 attached the AdministratorAccess policy. A2DBA is attached AmazonRDSFullAccess policy, which is used by database administrator. A2Backend is attached 
 AmazonRDSReadOnlyAccess and AmazonEC2ContainerServiceRole policies, which is used by backend engineers. A2Frontend is attached AmazonEC2ContainerServiceforEC2Role 
 policy and A2testing is attached AmazonEC2ReadOnlyAccess policy.All the roles can protect the cloud environment and keep the least privilege. Practically, it is 
 a little bit complicated for a small team, but it is useful especially when someone's credentials exposure at Github. And for the high privileges, only 
 limited role can visit the sensitive resources, for example, project managers can visit almost all of the resources.
 
-Some roles are generated for the specific service. For example, there is a role named ec2callsecretsmanager. It is attached the SecretsManagerReadWrite 
+Some roles are generated for the specific application. For example, there is a role named ec2callsecretsmanager. It is attached the SecretsManagerReadWrite 
 policy, which is used for a EC2 instance to visit the Secrets Manager service in AWS. It is a good method to hide the original password in the code and a 
 convenient approach to get the privilege from one service to another service without any code.
 
-\subsection{Customer data}
+For users, because the demo do not allow them to visit the visualisation without login, there are two roles. One is for guests, another is for login users. 
+Guests role is virtual. Guests can sign in with Gihub accounts. Github Oauth ensure the authentication securely. Once they become authenticated users, 
+all the visualisation can be shown, but they only have the read permission of the visualisation.
 
-\subsubsection{Step 1. Identify \& Category}
+\subsection{Data security}
 
-\subsubsection{Step 2. High level: who can access}
-  
-\subsubsection{Step 3. Policy from cloud IAM}
+Data in this demo is mainly in RDS MySQL, which is a kind of data in PaaS service model. There are two tables inclduing "main" and "users". The table "main" 
+stores all of the data needed by the visualisation. The another one stores all of the user's information. There are some steps to ensure the data security.
 
-\subsubsection{Step 4.what is more}
+\subsubsection{Step 1. Identification \& Category}
 
+S3 public data are also used in this demo. Everyone can read this data, so there is no special permission setting in this demo. RDS MySQL provided the authentication 
+by itself. The user and password can be used for the RDS MySQL. Moreover, the password is automatically generated and rotated by a Lambda function. That is 
+very good practical design in AWS.
+
+For classification, all the data are divided into three kind of data including public original data, imagery data after processing, user data. The most sensitive 
+data is the third one. 
+
+\subsubsection{Step 2. High level policy}
+
+Because the user data stored in RDS is the highly sensitive data in this demo, only the Java instances are allowed to visit it. And the entitlement matrix 
+is shown as Fig.~\ref{matrix}
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/matrix.png}}
+    \caption{Entitlement matrix}
+    \label{matrix}
+\end{figure}
+
+There are some accurate permission control methods provided by MySQL. The entitlement matrix is made by the MySQL privileges. Admin account is the supper administrator 
+which is managed by the project manager role. It is responsible for the management about database creating and auditing. And also, resource based policies provided 
+by IAM also give a basic data security, which is the role named AWSServiceRoleForRDS allowing the EC2 instance to visit RDS. At the application layer, the guest role 
+have no permission to read the user data. At the data shring layer, the user data has no need to share, so it does not take it into consideration. At the auditing layer, 
+project manager is responsible for the daily auditing of the account based auditing.
+
+\subsubsection{Step 3. Encryption}
+
+From the entrance, https is the first consideration of security. Https protocol uses TLS which is a kind of asymmetric encryption, and when the secret key are exchanged, 
+it uses symmetric encryption to transfer data. All of the data can be protected by it. Because this demo has no http domain name, https has not configured.
+
+For the data at rest encryption, RDS can enable the encryption when the database is created. And the key is stored in KMS. It is the cloud handles encryption.
+
+For the data in motion encryption, https is the most useful method between users and this demo.
+
+\subsubsection{Step 4. What is more}
+
+Data in this project is not so highly sensitive. For example, S3 data is public for everyone, the calculating data is also public for every authenticated user. Only user 
+information do not allow to be public to everyone. The reasonable security is good for the performance for a internet demo. Generally, after the above steps, the data 
+security would be sufficient, but the devil is in the detail, every step need to be very careful to implement, and make sure that performance does not degrade too much.
 
 \subsection{Network}
 
@@ -768,13 +806,13 @@ to close this part to avoid more damage. The third subnet is the core subnet whi
 
 The last step is to configure the security groups for step 1 and 2. In this demo, 3 zones are divided for 3 subnets, which is shown as Fig.~\ref{Security}. The inbound 
 rules of zone A and B allows port 80, which is the http service port connected by ELB in front of them. The inbound of zone C allows port 8080, which is the Tomcat 
-service port connected by instances in the zone A and B. And the outbound allows port 3306, which is the Mysql service port.
+service port connected by instances in the zone A and B. And the outbound allows port 3306, which is the MySQL service port.
 
 After these 3 steps, the network environment isolates all the services very well. It is the fundamental protection.
 
 \section{Actual AWS expenditure}
 
-Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 accounted 20 percent. RDS accounted 30 percent.
+Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 accounted for 20 percent. RDS accounted for 30 percent.
 
 \section{Team members and individual contribution within the team}
 \begin{itemize}
