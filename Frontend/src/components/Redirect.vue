@@ -43,7 +43,7 @@ export default {
                         this.$global.usrInfo = response.body.user
                         console.log(this.$global)
                         let usrname = this.$global.usrInfo.name
-                        //this.githubUrlReg.exec(this.$global.usrInfo[0].url)[1].trim() 
+                        // this.githubUrlReg.exec(this.$global.usrInfo[0].url)[1].trim() 
                         console.log(usrname)
                         // this.$global.usrname = usrname
                         let storage
