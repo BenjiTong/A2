@@ -78,7 +78,8 @@ export default {
                 .attr('width', d => d[1][0] - d[0][0])
                 .attr('height', d => d[1][1] - d[0][1])
                 .attr('fill', 'none')
-                .attr('stroke', 'red')
+                .attr('stroke', 'steelblue')
+                .attr('stroke-width', 3)
         }
     },
     computed: {
