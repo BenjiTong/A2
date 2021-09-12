@@ -11,12 +11,12 @@
                                         <img
                                             class="logo logo-dark"
                                             alt="logo"
-                                            src="img/logo-dark.png"
+                                            src="./img/logo-dark.png"
                                         />
                                         <img
                                             class="logo logo-light"
                                             alt="logo"
-                                            src="img/logo-light.png"
+                                            src="./img/logo-light.png"
                                         />
                                     </router-link>
                                 </div>
