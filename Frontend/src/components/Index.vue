@@ -8,16 +8,9 @@
                             <div class="col-6">
                                 <div class="bar__module">
                                     <router-link :to="{ name: 'Index' }">
-                                        <img
-                                            class="logo logo-dark"
-                                            alt="logo"
-                                            src="./img/logo-dark.png"
-                                        />
-                                        <img
-                                            class="logo logo-light"
-                                            alt="logo"
-                                            src="./img/logo-light.png"
-                                        />
+                                        <span class="h4 inline-block logo"
+                                            >A2Inc</span
+                                        >
                                     </router-link>
                                 </div>
                             </div>
@@ -128,8 +121,8 @@
                 <div class="masonry__container row masonry--active">
                     <div class="masonry__item col-md-4 col-12 filter-filter-1">
                         <my-props-world-map ref="worldMap"></my-props-world-map>
-                        <span class="h4 inline-block">Title</span>
-                        <span>Detailed Description</span>
+                        <span class="h4 inline-block">World Map</span>
+                        <span v-html="descriptionOfWorldMap"></span>
                     </div>
                     <p
                         class="masonry__item col-md-1 col-12 filter-filter-1"
@@ -137,9 +130,12 @@
                     <div class="masonry__item col-md-6 col-12 filter-filter-1">
                         <my-props-line-chart
                             ref="lineChart"
+                            v-on:movedInLineChart="movedInLineChart"
+                            v-on:enteredInLineChart="enteredInLineChart"
+                            v-on:leftInLineChart="leftInLineChart"
                         ></my-props-line-chart>
-                        <span class="h4 inline-block">Title</span>
-                        <span>Detailed Description</span>
+                        <span class="h4 inline-block">Line Chart</span>
+                        <span>{{ descriptionOfLineChart }}</span>
                     </div>
                 </div>
             </div>
@@ -164,7 +160,8 @@ export default {
                         dayData: null,
                         monthData: null,
                         yearData: null
-                    ]
+                    ],
+                    allWindows: []
                 },
                 {
                     lineChart: [
@@ -189,7 +186,9 @@ export default {
                 { text: 'China', value: 0 },
                 { text: 'New Zealand', value: 1 },
                 { text: 'Middle East', value: 2 }
-            ]
+            ],
+            adverbs: ['Annual', 'Monthly', 'Daily'],
+            descriptionOfWorldMap: '<font color="red">Red</font> rects represent sampled regions'
         }
     },
     methods: {
@@ -226,30 +225,35 @@ export default {
         },
         resolveOriginData (index, originData) {
             if (this.data[index].lineChart != null) return
+            let that = this
             let dayMap = new Map()
             let monthMap = new Map()
             let yearMap = new Map()
-            originData.forEach(function (d) {
+            originData.forEach(function (d) { // only put windows in dayMap. In monthMap and yearMap just record the number of windows
                 let strDay = d.datetime.substr(0, 10)
                 let strMonth = strDay.substr(0, 8) + '01'
                 let strYear = strMonth.substr(0, 5) + '01-01'
                 if (dayMap.has(strDay)) {
                     dayMap.get(strDay).radiance += +d.radiance
                     dayMap.get(strDay).pixels += +d.pixels
+                    dayMap.get(strDay).window.push(that.resolveWindowFromStrToArray(d.window))
                 } else {
-                    dayMap.set(strDay, { radiance: +d.radiance, pixels: +d.pixels })
+                    let windowArray = that.resolveWindowFromStrToArray(d.window)
+                    dayMap.set(strDay, { radiance: +d.radiance, pixels: +d.pixels, window: [windowArray] })
                 }
                 if (monthMap.has(strMonth)) {
                     monthMap.get(strMonth).radiance += +d.radiance
                     monthMap.get(strMonth).pixels += +d.pixels
+                    monthMap.get(strMonth).windowNum += 1
                 } else {
-                    monthMap.set(strMonth, { radiance: +d.radiance, pixels: +d.pixels })
+                    monthMap.set(strMonth, { radiance: +d.radiance, pixels: +d.pixels, windowNum: 1 })
                 }
                 if (yearMap.has(strYear)) {
                     yearMap.get(strYear).radiance += +d.radiance
                     yearMap.get(strYear).pixels += +d.pixels
+                    yearMap.get(strYear).windowNum += 1
                 } else {
-                    yearMap.set(strYear, { radiance: +d.radiance, pixels: +d.pixels })
+                    yearMap.set(strYear, { radiance: +d.radiance, pixels: +d.pixels, windowNum: 1 })
                 }
             })
 
@@ -260,32 +264,44 @@ export default {
 
             let dayData = {
                 y: 'radiance / pixels',
-                series: [{ name: this.options[index].text, values: [] }],
+                series: [{ name: this.options[index].text, values: [], windowIndexRange: [] }],
                 dates: []
             }
             let monthData = {
                 y: 'radiance / pixels',
-                series: [{ name: this.options[index].text, values: [] }],
+                series: [{ name: this.options[index].text, values: [], windowIndexRange: [] }],
                 dates: []
             }
             let yearData = {
                 y: 'radiance / pixels',
-                series: [{ name: this.options[index].text, values: [] }],
+                series: [{ name: this.options[index].text, values: [], windowIndexRange: [] }],
                 dates: []
             }
+            let allWindows = []
+            let dayWindowIndex = 0
+            let monthWindowIndex = 0
+            let yearWindowIndex = 0
             dayMap.forEach((value, key) => {
                 dayData.dates.push(new Date(key))
                 dayData.series[0].values.push(value.radiance / value.pixels)
+                value.window.forEach((d) => allWindows.push(d))
+                dayData.series[0].windowIndexRange.push([dayWindowIndex, dayWindowIndex + value.window.length])
+                dayWindowIndex += value.window.length
             })
             monthMap.forEach((value, key) => {
                 monthData.dates.push(new Date(key))
                 monthData.series[0].values.push(value.radiance / value.pixels)
+                monthData.series[0].windowIndexRange.push([monthWindowIndex, monthWindowIndex + value.windowNum])
+                monthWindowIndex += value.windowNum
             })
             yearMap.forEach((value, key) => {
                 yearData.dates.push(new Date(key))
                 yearData.series[0].values.push(value.radiance / value.pixels)
+                yearData.series[0].windowIndexRange.push([yearWindowIndex, yearWindowIndex + value.windowNum])
+                yearWindowIndex += value.windowNum
             })
             this.data[index].lineChart = [yearData, monthData, dayData]
+            this.data[index].allWindows = allWindows
             console.log(this.data[index])
             if (this.selectedArea === index) {
                 this.resetData(this.selectedArea)
@@ -308,6 +324,22 @@ export default {
                 return 0
             })
             return new Map(originArray.map(d => [d[0], d[1]]))
+        },
+        resolveWindowFromStrToArray (strWindow) {
+            let tempArray = strWindow.slice(1, -1).split(', ')
+            return [[+tempArray[0], +tempArray[1]], [+tempArray[2], +tempArray[3]]]
+        },
+        enteredInLineChart () {
+            console.log('enteredInLineChart ')
+            this.$refs.worldMap.showRects2(true)
+        },
+        leftInLineChart () {
+            console.log('leftInLineChart ')
+            this.$refs.worldMap.showRects2(false)
+        },
+        movedInLineChart (indexRange) {
+            console.log('movedInLineChart ' + indexRange)
+            this.$refs.worldMap.drawRects2(this.data[this.selectedArea].allWindows.slice(indexRange[0], indexRange[1]))
         }
     },
     watch: {
@@ -318,6 +350,15 @@ export default {
         pickedMode: function (val) {
             console.log('pickedMode ' + val)
             this.resetData()
+        }
+    },
+    computed: {
+        descriptionOfLineChart: function () {
+            if (this.pickedMode > 0) {
+                return this.adverbs[this.pickedMode] + ' radiance / pixels in ' + this.options[this.selectedArea].text
+            } else {
+                return null
+            }
         }
     },
     mounted () {
