@@ -168,11 +168,16 @@ public class GithubLogController {
         map.put("user", JSONArray.parse(responseStr));
 
         // // save user
-        GitUser gitUser = JSON.parseObject(responseStr, GitUser.class);
-        boolean exists = userRepository.existsById(gitUser.getId());
-        if (!exists) {
-            userRepository.save(gitUser);
+        try {
+            GitUser gitUser = JSON.parseObject(responseStr, GitUser.class);
+            boolean exists = userRepository.existsById(gitUser.getId());
+            if (!exists) {
+                userRepository.save(gitUser);
+            }
+        } catch (Exception e) {
+            logger.error("save user error", e);
         }
+
       
         return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
     }
