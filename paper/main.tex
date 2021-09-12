@@ -172,7 +172,7 @@ To explain more steps, there are some summaries as below.
 
     \paragraph{Low-Earth orbit}
     
-    Low Earth Orbit (LEO) is an orbit relatively close to the surface of the earth. It is usually located at an altitude of fewer than 
+    Low Earth Orbit (LEO) is an orbit relatively close to the surface of the earth (Fig.~\ref{LEO}) . It is usually located at an altitude of fewer than 
     2000 kilometers, but it may be as low as 400 kilometers above the earth. Compared to other orbits, it is low, but still far from the 
     surface of the earth \cite{earthdata28:online}.It is the most commonly used orbit for satellite imaging because it is possible to take 
     higher resolution images close to the surface. It is also the orbit used by the International Space Station (ISS) because it is easier 
@@ -189,7 +189,7 @@ To explain more steps, there are some summaries as below.
     \paragraph{Geostationary}
     
     The orbit of a geostationary satellite can only be achieved at an altitude very close to 35,786 kilometers, and the satellite can 
-    be fixed at one longitude of the equator. There are hundreds of communication satellites and several weather satellites in such orbits.
+    be fixed at one longitude of the equator (Fig.~\ref{Geostationary}). There are hundreds of communication satellites and several weather satellites in such orbits.
 
 \begin{figure}[htbp]
     \centerline{\includegraphics[width=260pt]{images/1.1.3.png}}
@@ -208,7 +208,7 @@ To explain more steps, there are some summaries as below.
     \subparagraph{Radio}
     
     Very Low Frequency (VLF): ELF is extremely low frequency and extremely low frequency, and its frequency is in the range of 
-    300 Hz to 30 kHz. It is a kind of radio wave, just like AM/FM signal, but with a lower frequency. It is very useful because 
+    300 Hz to 30 kHz (Fig.~\ref{Spectrum}). It is a kind of radio wave, just like AM/FM signal, but with a lower frequency. It is very useful because 
     it is mainly reflected at a height of 60-90 kilometers in the D zone of the earth's ionosphere, so it is effectively guided 
     to a global distance in the earth's ionospheric waveguide. It is widely used to set up radio receivers almost anywhere on 
     the earth \cite{Introduc19:online}. This signal can receive short radiation from lightning strikes in half of the earth.
@@ -433,7 +433,7 @@ other details are described as below.
 
 \subsection{Whole infrastructure}
 
-The main architecture is shown as Fig.~\ref{fig2}. First of all, two kinds of IaC platform, which are Ansible and CloudFormation.
+The main architecture is shown as Fig.~\ref{fig2}. First of all, two kinds of IaC platform, which are Ansible and CloudFormation, are used for deployment.
 Ansible is the first choice that can be esily used in most of situations. When some service need to configure complicatedly, CloudFormation is 
 better. Secondly, NAT and ELB are the only entrance to the project. That is the best practice for network security that can mitigate the effects 
 of public cyberattacks. Thirdly, IAM roles are used at all kinds of important scenarios, for example, deployment, database visiting, various services visiting.
@@ -778,7 +778,7 @@ would be existed in some instances.
     \label{subnet}
 \end{figure}
 
-The second step is the sbunet design, which is shown as Fig.~\ref{subnet}. There are there different subnets using for services in different layers. And also, 
+The second step is the subnet design, which is shown as Fig.~\ref{subnet}. There are there different subnets using for services in different layers. And also, 
 these subnet configurations help the step one to isolate the public network environment. The subnets named Intranet2 and Intranet3 are the isolated frontend 
 instances. The benefit of this design is isolate the same functions into different partitions. When a part of entire demo are hacked, it is easy 
 to close this part to avoid more damage. The third subnet is the core subnet which is connected with database.
