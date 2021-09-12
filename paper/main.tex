@@ -170,7 +170,7 @@ moves from south to north as it passes the equator. In descending orbit, the sat
 \end{figure}
  
 \paragraph{Low-Earth orbit}
-    
+
 Low Earth Orbit (LEO) (Fig.~\ref{LEO})is an orbit relatively close to the surface of the earth. It is usually located at an altitude of fewer than 
 2000 kilometers, but it may be as low as 400 kilometers above the earth. Compared to other orbits, it is low, but still far from the 
 surface of the earth \cite{earthdata28:online}.It is the most commonly used orbit for satellite imaging because it is possible to take 
@@ -185,7 +185,6 @@ orbits the earth about 16 times a day \cite{ESAkerne12:online}.
     \label{LEO}
 \end{figure}
 
-\\
 
 \paragraph{Geostationary}
     
@@ -197,8 +196,6 @@ be fixed at one longitude of the equator. There are hundreds of communication sa
     \caption{Geostationary}
     \label{Geostationary}
 \end{figure}
-
-\\
 
 \paragraph{Electromagnetic Spectrum} 
 The electromagnetic spectrum (Fig.~\ref{Spectrum})is a graph of electronic signals distributed according to frequency or wavelength \cite{electrom75:online}. Although all electromagnetic waves travel at the speed of light in vacuum, they have a wide range of frequencies, wavelengths, and photon energies. The entire electromagnetic spectrum is divided into radio waves, infrared radiation, visible light, ultraviolet radiation, X-rays, and gamma rays, but people are far away in gamma rays, so we will not discuss them. Due to the different emission, transmission and absorption of different waves, they have different practicability and practical range.
@@ -437,7 +434,7 @@ other details are described as below.
 
 \subsection{Whole infrastructure}
 
-The main architecture is shown as Fig.~\ref{fig2}. First of all, two kinds of IaC platform, which are Ansible and CloudFormation.
+The main architecture is shown as Fig.~\ref{fig2}. First of all, two kinds of IaC platform, which are Ansible and CloudFormation, are used for deployment.
 Ansible is the first choice that can be esily used in most of situations. When some service need to configure complicatedly, CloudFormation is 
 better. Secondly, NAT and ELB are the only entrance to the project. That is the best practice for network security that can mitigate the effects 
 of public cyberattacks. Thirdly, IAM roles are used at all kinds of important scenarios, for example, deployment, database visiting, various services visiting.
@@ -782,7 +779,7 @@ would be existed in some instances.
     \label{subnet}
 \end{figure}
 
-The second step is the sbunet design, which is shown as Fig.~\ref{subnet}. There are there different subnets using for services in different layers. And also, 
+The second step is the subnet design, which is shown as Fig.~\ref{subnet}. There are there different subnets using for services in different layers. And also, 
 these subnet configurations help the step one to isolate the public network environment. The subnets named Intranet2 and Intranet3 are the isolated frontend 
 instances. The benefit of this design is isolate the same functions into different partitions. When a part of entire demo are hacked, it is easy 
 to close this part to avoid more damage. The third subnet is the core subnet which is connected with database.
@@ -821,7 +818,7 @@ Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 acco
 
 \subsection{Shengzhu Wang}
 \textbf{Role and Tasks:} BE. Implemented part of the backend Java code. 
-
+ 
 \textbf{Writing contribution includs:} Quit the team early without participating in writing.
 
 \subsection{SiXiang Xiong}
