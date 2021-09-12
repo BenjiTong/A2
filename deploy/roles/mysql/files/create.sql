@@ -12,11 +12,11 @@ CREATE TABLE `main` (
 );
 
 CREATE TABLE `git_user` (
-	`id` INT(10) unsigned NOT NULL,
-	`email` VARCHAR(150) NOT NULL DEFAULT '',
-	`name` VARCHAR(50) NOT NULL DEFAULT '0',
-	`location` VARCHAR(250) NOT NULL DEFAULT '',
-	`company` VARCHAR(250) NOT NULL DEFAULT '',
-	`create_at` datetime NOT NULL,
+	`id` INT(10) unsigned,
+	`email` VARCHAR(150) DEFAULT '',
+	`name` VARCHAR(50) DEFAULT '0',
+	`location` VARCHAR(250) DEFAULT '',
+	`company` VARCHAR(250) DEFAULT '',
+	`create_at` datetime,
 	PRIMARY KEY (`id`)
 );

@@ -37,6 +37,7 @@ import java.util.Map;
 public class GithubLogController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
     private UserRepository userRepository;
 
     private String secret;
@@ -181,7 +182,6 @@ public class GithubLogController {
       
         return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
     }
-
     @RequestMapping("/oauth/islogin")
     public ResponseEntity<Map<String,String>> isLogin(String token, String state, Model model, HttpServletRequest req, HttpSession session) throws Exception {
         Map<String,String> map = new HashMap<>();

@@ -46,7 +46,7 @@ public class GitUser {
     }
 
     public void setCompany(String company) {
-        this.company = company;
+        this.company = (company==null?"":company);
     }
 
     public String getLocation() {
@@ -54,7 +54,7 @@ public class GitUser {
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        this.location = (location==null?"":location);
     }
 
     public String getName() {
@@ -62,7 +62,7 @@ public class GitUser {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name==null?"":name);
     }
 
     public String getEmail() {
@@ -70,6 +70,6 @@ public class GitUser {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = (email==null?"":email);
     }
  }
