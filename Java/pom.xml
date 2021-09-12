@@ -15,7 +15,7 @@
 	<name>web</name>
 	<description>Light platform</description>
 	<properties>
-		<java.version>16</java.version>
+		<java.version>11</java.version>
 	</properties>
 	 
 
