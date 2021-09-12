@@ -8,9 +8,22 @@
                             <div class="col-6">
                                 <div class="bar__module">
                                     <router-link :to="{ name: 'Index' }">
+<<<<<<< HEAD
                                         <span class="h4 inline-block logo"
                                             >A2Inc</span
                                         >
+=======
+                                        <img
+                                            class="logo logo-dark"
+                                            alt="logo"
+                                            src="../assets/img/logo-dark.png"
+                                        />
+                                        <img
+                                            class="logo logo-light"
+                                            alt="logo"
+                                            src="../assets/img/logo-light.png"
+                                        />
+>>>>>>> main
                                     </router-link>
                                 </div>
                             </div>

@@ -1,5 +1,6 @@
 package com.light.controllers;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
@@ -8,6 +9,8 @@ import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.light.entity.GitUser;
+import com.light.repository.UserRepository;
 import com.light.util.GithubConstant;
 import com.light.util.HttpsUtil;
 
@@ -18,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-// import org.springframework.util.StringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,8 +37,12 @@ import java.util.Map;
 public class GithubLogController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private UserRepository userRepository;
+
     private String secret;
     private ObjectMapper mapper = new ObjectMapper();
+
 
     // @Autowired
     // private IGithubService githubService;
@@ -161,9 +167,21 @@ public class GithubLogController {
         session.setAttribute("token", token);
         map.put("token", token);
         map.put("user", JSONArray.parse(responseStr));
+
+        // // save user
+        try {
+            GitUser gitUser = JSON.parseObject(responseStr, GitUser.class);
+            boolean exists = userRepository.existsById(gitUser.getId());
+            if (!exists) {
+                userRepository.save(gitUser);
+            }
+        } catch (Exception e) {
+            logger.error("save user error", e);
+        }
+
+      
         return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
     }
-
     @RequestMapping("/oauth/islogin")
     public ResponseEntity<Map<String,String>> isLogin(String token, String state, Model model, HttpServletRequest req, HttpSession session) throws Exception {
         Map<String,String> map = new HashMap<>();
