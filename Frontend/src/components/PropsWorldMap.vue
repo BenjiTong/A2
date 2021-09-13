@@ -16,10 +16,9 @@ export default {
             outline: { type: 'Sphere' },
             projection: d3.geoMercator().rotate([257, 0]).fitSize([this.width, this.height], { type: 'Sphere' }),
             graticule: d3.geoGraticule10(),
-            // eslint-disable-next-line no-template-curly-in-string
-            clipPathUrl: 'url(${new URL("#clip", location)})',
             svg: null,
-            gRects: null
+            gRects: null,
+            gRects2: null
         }
     },
     methods: {
@@ -57,6 +56,7 @@ export default {
                 .attr('stroke', '#aaaaaa')
                 .attr('fill', 'none')
 
+            this.gRects2 = g.append('g').attr('class', 'rects2')
             this.gRects = g.append('g').attr('class', 'rects')
 
             this.svg.append('use')
@@ -66,10 +66,7 @@ export default {
         },
         drawRects () {
             let projectedDataRects = this.dataRects.map(d => [this.projection([d[0][0], d[1][1]]), this.projection([d[1][0], d[0][1]])])
-            console.log(this.projection(this.dataRects[0][0]))
-            console.log(this.dataRects)
-            console.log(projectedDataRects)
-            this.gRects.selectAll('foo')
+            this.gRects.selectAll('rect')
                 .data(projectedDataRects)
                 .enter()
                 .append('rect')
@@ -79,7 +76,52 @@ export default {
                 .attr('height', d => d[1][1] - d[0][1])
                 .attr('fill', 'none')
                 .attr('stroke', 'steelblue')
-                .attr('stroke-width', 3)
+                .attr('stroke-width', 4)
+        },
+        drawRects2 (dataRects2) {
+            let projectedDataRects = dataRects2.map(d => [this.projection([d[0][0], d[1][1]]), this.projection([d[1][0], d[0][1]])])
+            this.gRects2.selectAll('rect')
+                .data(projectedDataRects, d => d[0][0])
+                .join(
+                    enter => enter
+                        .append('rect')
+                        .attr('fill', 'none')
+                        .attr('stroke', 'red'),
+                    update => update
+                ).call(rect => rect
+                    .attr('x', d => d[0][0])
+                    .attr('y', d => d[0][1])
+                    .attr('width', d => d[1][0] - d[0][0])
+                    .attr('height', d => d[1][1] - d[0][1])
+                    .attr('opacity', this.rect2Opacity(projectedDataRects.length))
+                    .attr('stroke-width', this.rect2StrokeWidth(projectedDataRects.length))
+
+                )
+        },
+        showRects2 (flag) {
+            if (flag) {
+                this.gRects2.attr('display', null)
+            } else {
+                this.gRects2.attr('display', 'none')
+            }
+        },
+        rect2Opacity (numRects) {
+            if (numRects < 10) {
+                return 1
+            } else if (numRects < 300) {
+                return 0.5
+            } else {
+                return 0.1
+            }
+        },
+        rect2StrokeWidth (numRects) {
+            if (numRects < 10) {
+                return 3
+            } else if (numRects < 300) {
+                return 1.5
+            } else {
+                return 1
+            }
         }
     },
     computed: {

@@ -139,8 +139,16 @@ export default {
 
             dot.append('circle')
                 .attr('r', 2.5)
+                .attr('fill', 'red')
 
             dot.append('text')
+                .attr('class', 'first_line')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 12)
+                .attr('text-anchor', 'middle')
+                .attr('y', -20)
+            dot.append('text')
+                .attr('class', 'second_line')
                 .attr('font-family', 'sans-serif')
                 .attr('font-size', 10)
                 .attr('text-anchor', 'middle')
@@ -155,17 +163,21 @@ export default {
                 const s = d3.least(that.data.series, d => Math.abs(d.values[i] - ym))
                 that.path.attr('stroke', d => d === s ? null : '#ddd').filter(d => d === s).raise()
                 dot.attr('transform', `translate(${that.scaleX(that.data.dates[i])},${that.scaleY(s.values[i])})`)
-                dot.select('text').text(s.name)
+                dot.select('text.first_line').text(s.name)
+                dot.select('text.second_line').text('samples: ' + (s.windowIndexRange[i][1] - s.windowIndexRange[i][0]))
+                that.$emit('movedInLineChart', s.windowIndexRange[i])
             }
 
             function entered () {
                 that.path.style('mix-blend-mode', null).attr('stroke', '#ddd')
                 dot.attr('display', null)
+                that.$emit('enteredInLineChart', null)
             }
 
             function left () {
                 that.path.style('mix-blend-mode', 'multiply').attr('stroke', null)
                 dot.attr('display', 'none')
+                that.$emit('leftInLineChart', null)
             }
         }
     },
