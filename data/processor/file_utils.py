@@ -40,7 +40,7 @@ class FileUtils:
     MiddleEastArea = [35.991737,24.828731,72.78633,39.298213]
     
     WAIT_LIST = {0:ChinaArea, 1:NZArea, 2:MiddleEastArea}
-    native_run = True
+    native_run = False
 
     def exsit_native_path(file_path):
       return os.path.exists(file_path)
