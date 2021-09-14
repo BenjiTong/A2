@@ -11,12 +11,12 @@
                                         <img
                                             class="logo logo-dark"
                                             alt="logo"
-                                            src="../assets/img/logo-dark.png"
+                                            src="@/assets/img/logo-dark.png"
                                         />
                                         <img
                                             class="logo logo-light"
                                             alt="logo"
-                                            src="../assets/img/logo-light.png"
+                                            src="@/assets/img/logo-light.png"
                                         />
                                     </router-link>
                                 </div>
@@ -137,6 +137,7 @@
                     <div class="masonry__item col-md-6 col-12 filter-filter-1">
                         <my-props-line-chart
                             ref="lineChart"
+                            :tooltipDateMode="pickedMode"
                             v-on:movedInLineChart="movedInLineChart"
                             v-on:enteredInLineChart="enteredInLineChart"
                             v-on:leftInLineChart="leftInLineChart"
@@ -316,7 +317,7 @@ export default {
             })
             this.data[index].lineChart = [yearData, monthData, dayData]
             this.data[index].allWindows = allWindows
-            console.log(this.data[index])
+            // console.log(this.data[index])
             if (this.selectedArea === index) {
                 this.resetData(this.selectedArea)
             }
@@ -328,6 +329,7 @@ export default {
         },
         sortMapByKey (originMap) {
             let originArray = Array.from(originMap)
+            // console.log('before sort ' + originArray)
             originArray.sort(function compare (a, b) {
                 if (a[0] < b[0]) {
                     return -1
@@ -337,6 +339,7 @@ export default {
                 }
                 return 0
             })
+            // console.log('after sort ' + originArray)
             return new Map(originArray.map(d => [d[0], d[1]]))
         },
         resolveWindowFromStrToArray (strWindow) {
@@ -344,15 +347,15 @@ export default {
             return [[+tempArray[0], +tempArray[1]], [+tempArray[2], +tempArray[3]]]
         },
         enteredInLineChart () {
-            console.log('enteredInLineChart ')
+            // console.log('enteredInLineChart ')
             this.$refs.worldMap.showRects2(true)
         },
         leftInLineChart () {
-            console.log('leftInLineChart ')
+            // console.log('leftInLineChart ')
             this.$refs.worldMap.showRects2(false)
         },
         movedInLineChart (indexRange) {
-            console.log('movedInLineChart ' + indexRange)
+            // console.log('movedInLineChart ' + indexRange)
             this.$refs.worldMap.drawRects2(this.data[this.selectedArea].allWindows.slice(indexRange[0], indexRange[1]))
         },
         openAWSRegistry () {
@@ -361,11 +364,11 @@ export default {
     },
     watch: {
         selectedArea: function (val) {
-            console.log('selectedArea ' + val)
+            // console.log('selectedArea ' + val)
             this.resetData()
         },
         pickedMode: function (val) {
-            console.log('pickedMode ' + val)
+            // console.log('pickedMode ' + val)
             this.resetData()
         }
     },
