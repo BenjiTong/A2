@@ -100,9 +100,3 @@ def start_handler(event, context):
     if native_run == False:
         SQS_CLIENT.send_message(QueueUrl=os.environ['CATALOG_CRAWL_QUEUE'], MessageBody=url)
     print('[INFO] Inserting root catalog', url)
-
-exx = {'Records':[
-        {'body':url},
-]}
-        
-native_handle_sqs(exx,None)
