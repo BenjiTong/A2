@@ -46,10 +46,10 @@ Guizhou, China \\
 benji.tong1117@gmail.com}
 \and
 \IEEEauthorblockN{5\textsuperscript{th} SiXiang Xiong}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockA{\textit{Faculty of Computer Sciences} \\
+\textit{The University of Waikato}\\
+Wuhan, China \\
+1591686 sixianglearners3@gmail.com}
 }  
 
 \maketitle
@@ -455,9 +455,35 @@ per pixel.
 \end{figure}
 
 \subsection{Login}
+Springboot website adds third-party login Github login based on OAuth2
+1. Introduction to OAuth2
+OAuth is currently the most popular authorization mechanism used to authorize third-party applications and
+obtain user data. OAuth has been widely used all over the world, and the current version 2.0. Simply put,
+OAuth is an authorization mechanism. The owner of the data tells the system that they agree to authorize
+third-party applications to enter the system and obtain these data. The system thus generates a short-term
+entry token, which can be used in place of a password for use by third-party applications. Therefore.
+the role of token and password is the same, both can enter the system, but these are three differences:
+- The token is short-term, it will automatically expire when it expires and the user cannot modify it.
+The password is generally valid for a long time and the user will not change if it is not modified.
+- The token can be revoked by the data owner and will become invalid immidiately.
+- The token has a scope, because the token has the same function as the password, the token must
+also be kept strictly confidential. The consequences of leaking the token and leaking the password are
+the same. This is why the validity period of the token is very short.
+2. the principle of Github third-party login
+Third-party login is actually OAuth authorization and authentication. The user wants to log into the
+A website, and the A website allows the user to provide data from a third-party website to provide his
+identity. Obtaining the identity data of a third-party website requires OAuth authorization.
+Take the use of Github as a third-party login as an example:
+The user clicks on the website to log in using Github, and the A website jumps to Github, callback
+URI and Client ID will be brought:
+1. Github asks the user to log in, and then asks "A website requires XX permmission, do you agree?"
+For the same website, after agreeing once, user authorization is not required for logging in next time.
+2. If the user agrees, Github will redirect back to website A and send back an authorization code.
+3. A website uses the authorization code to request a token from Github.
+4. Github returns the token.
+5. Website A uses the token to request user data from Github.
 
 \subsection{Imagery Overview}
-    
 The Resources on AWS is Light Every Night dataset of all VIIRS DNB and DMSP-OLS nighttime satellite data. Resource type is S3 Bucket. 
 Amazon Resource Name (ARN) is arn:aws:s3:::globalnightlight. AWS Region is us-east-1. AWS CLI Access is no AWS account required, and 
 command is "aws s3 ls s3://globalnightlight/ --no-sign-request" \cite{WorldBan13:online}.
@@ -668,7 +694,32 @@ provisioned by CloudFormation because there is a ready template. It has to be me
 
 
 \subsection{Testing}
-
+Use Postman testing tool to test this website. The security testing of Web application system have:
+1. Catalogue configuration
+set catalogue correctly, every catalogue should have index.html page or main.html page.
+2. Login
+Our system does not apply first-registe-last-login method, so hence that we does not need to test
+valid and invalid username and password, the functionality of third-party login is able to help
+us authorized our credential, only need to do the manual testing.
+3. Session
+Testing whether web application system have restriction of timeout. In other word, user need to
+login again after 15 seconds if they have not clicked anything in this webpage then the website
+logout or not.
+4. Log file
+For ensuring web application service security, log file is really essential, it must be test whether
+relative information is write into log file and whether information can be tracked or not.
+5. Encryption
+While using safe socket, we need to test whether the encryption is correct and check the integrity
+of the information.
+6. Security vulnerabilities
+Server-side scripts often constitute security vulnerabilities, and these vulnerabilities are often exploited by hackers.
+Therefore, it is also necessary to test the problem that scripts cannot be placed and edited on the server side without authorization.
+7. Code legality test
+Code legality testing mainly includes two parts:
+*program code legality test.
+*display code legality test.
+8. Documentation test
+Integrity accurency consistency suitable reasonable relativity testability.
 \subsection{Project management}
 
 Project management is also a big chanllenge in this special period. Scrum development method was chosen from the first day because two of members
@@ -823,7 +874,10 @@ Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 acco
 
 \subsection{SiXiang Xiong}
 \textbf{Role and Tasks:} BE, Testing
-
+From my perspective, I have study many methods of writing user login and third party login,
+finally learning how to implement the third party login with github as for our website,
+usually we use OAuth2, springboot, then select java to develop, in this project, I help to test
+this website though postman.
 \textbf{Writing contribution includs:} 
 
 \subsection{Wenjie Tong} 
