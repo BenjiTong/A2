@@ -5,8 +5,9 @@
 <script>
 // 引入d3
 import * as d3 from 'd3'
+import util from '@/util.js'
 export default {
-    props: ['initialData'],
+    props: ['tooltipDateMode'],
     data () {
         return {
             data: this.initialData,
@@ -144,14 +145,23 @@ export default {
             dot.append('text')
                 .attr('class', 'first_line')
                 .attr('font-family', 'sans-serif')
-                .attr('font-size', 12)
+                .attr('font-size', 10)
                 .attr('text-anchor', 'middle')
-                .attr('y', -20)
+                .attr('font-weight', 'bold')
+                .attr('y', -32)
             dot.append('text')
                 .attr('class', 'second_line')
                 .attr('font-family', 'sans-serif')
                 .attr('font-size', 10)
                 .attr('text-anchor', 'middle')
+                .attr('font-weight', 'bold')
+                .attr('y', -20)
+            dot.append('text')
+                .attr('class', 'third_line')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'middle')
+                .attr('font-weight', 'bold')
                 .attr('y', -8)
 
             function moved (event) {
@@ -165,6 +175,7 @@ export default {
                 dot.attr('transform', `translate(${that.scaleX(that.data.dates[i])},${that.scaleY(s.values[i])})`)
                 dot.select('text.first_line').text(s.name)
                 dot.select('text.second_line').text('samples: ' + (s.windowIndexRange[i][1] - s.windowIndexRange[i][0]))
+                dot.select('text.third_line').text(util.formatDateByMode(that.data.dates[i], that.tooltipDateMode))
                 that.$emit('movedInLineChart', s.windowIndexRange[i])
             }
 
