@@ -441,7 +441,7 @@ Running "make deploy" in this directory will follow below steps to built the Lam
     \label{cf1}
 \end{figure}
 
-Running "make deploy" in the directory show as Fig.~\ref{cf2}, which is "A2/deploy/roles/mysql/templates", can create a slave RDS MySQL instance. Because 
+Running "make deploy" in the directory shown as Fig.~\ref{cf2}, which is "A2/deploy/roles/mysql/templates", can create a slave RDS MySQL instance. Because 
 a cross-region database replica is needed in this demo, running "make master" can build another master RDS MySQL after changing the aws-cli region. And the 
 slave instance is replicated instantly from the master instance. Both of the commands for MySQL are using CloudFormation. The first one is just a very 
 simple process, but the second one is also generating a Lambda function to rotate the MySQL password in the master database, and store it in Secrets Manager service. 
