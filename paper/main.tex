@@ -336,10 +336,6 @@ Spring-boot is a Java web framework that can help developer build their web inst
 stand-alone, production-grade application by it \cite{SpringBo66:online}. Because of its features such as no code generation 
 and no requirement for XML configuration, it is the best choose for a Java development team.
 
-\subsection{Oauth github}
-
-this is the explanation
-
 \subsection{Ansible}
 
 Ansible is a famous open source deployment platform, which is convenient to enable the infrastructure as code (IaC). 
@@ -728,7 +724,7 @@ had already experienced this method. This iterative approach towards the complet
 It is important that some tools let the team work like a native team. All of the team members are from China, but nobody knew each other before. 
 So at the first day, the IM platform named Lark, which was widely used in the work place in China, was chosen by team members. Java is the first 
 language in the team because team members are almost good at it. By Github, all of the code can be easily shared with members and easily taken 
-control of its version. Remote cooperation is not a easy thing, so team members create a event for vedio meeting everyday. At the same time, it 
+control of its version. Remote cooperation is not a easy thing, so team members create a event for video meeting everyday. At the same time, it 
 is also the agile standup meeting everyday. With the development and research process, some members have to stop to learn more things about the 
 lack of relative knowledge. For example, none of members are good at some key technologies, such as geospatial imagery processing, Vue, AWS usage. 
 So the development plan was always disrupted because of the learning. Thanks to the agile method, the development is not influenced too much by 
@@ -772,51 +768,6 @@ For users, because the demo do not allow them to visit the visualisation without
 Guests role is virtual. Guests can sign in with Gihub accounts. Github Oauth ensure the authentication securely. Once they become authenticated users, 
 all the visualisation can be shown, but they only have the read permission of the visualisation.
 
-\subsection{Data security}
-
-Data in this demo is mainly in RDS MySQL, which is a kind of data in PaaS service model. There are two tables inclduing "main" and "users". The table "main" 
-stores all of the data needed by the visualisation. The another one stores all of the user's information. There are some steps to ensure the data security.
-
-\subsubsection{Step 1. Identification \& Category}
-
-S3 public data are also used in this demo. Everyone can read this data, so there is no special permission setting in this demo. RDS MySQL provided the authentication 
-by itself. The user and password can be used for the RDS MySQL. Moreover, the password is automatically generated and rotated by a Lambda function. That is 
-very good practical design in AWS.
-
-For classification, all the data are divided into three kind of data including public original data, imagery data after processing, user data. The most sensitive 
-data is the third one. 
-
-\subsubsection{Step 2. High level policy}
-
-Because the user data stored in RDS is the highly sensitive data in this demo, only the Java instances are allowed to visit it. And the entitlement matrix 
-is shown as Fig.~\ref{matrix}
-
-\begin{figure}[htbp]
-    \centerline{\includegraphics[width=260pt]{images/matrix.png}}
-    \caption{Entitlement matrix}
-    \label{matrix}
-\end{figure}
-
-There are some accurate permission control methods provided by MySQL. The entitlement matrix is made by the MySQL privileges. Admin account is the supper administrator 
-which is managed by the project manager role. It is responsible for the management about database creating and auditing. And also, resource based policies provided 
-by IAM also give a basic data security, which is the role named AWSServiceRoleForRDS allowing the EC2 instance to visit RDS. At the application layer, the guest role 
-have no permission to read the user data. At the data shring layer, the user data has no need to share, so it does not take it into consideration. At the auditing layer, 
-project manager is responsible for the daily auditing of the account based auditing.
-
-\subsubsection{Step 3. Encryption}
-
-From the entrance, https is the first consideration of security. Https protocol uses TLS which is a kind of asymmetric encryption, and when the secret key are exchanged, 
-it uses symmetric encryption to transfer data. All of the data can be protected by it. Because this demo has no http domain name, https has not configured.
-
-For the data at rest encryption, RDS can enable the encryption when the database is created. And the key is stored in KMS. It is the cloud handles encryption.
-
-For the data in motion encryption, https is the most useful method between users and this demo.
-
-\subsubsection{Step 4. What is more}
-
-Data in this project is not so highly sensitive. For example, S3 data is public for everyone, the calculating data is also public for every authenticated user. Only user 
-information do not allow to be public to everyone. The reasonable security is good for the performance for a internet demo. Generally, after the above steps, the data 
-security would be sufficient, but the devil is in the detail, every step need to be very careful to implement, and make sure that performance does not degrade too much.
 
 \subsection{Network}
 
@@ -830,8 +781,8 @@ would be existed in some instances.
     \label{subnet}
 \end{figure}
 
-The second step is the subnet design, which is shown as Fig.~\ref{subnet}. There are there different subnets using for services in different layers. And also, 
-these subnet configurations help the step one to isolate the public network environment. The subnets named Intranet2 and Intranet3 are the isolated frontend 
+The second step is the subnet design, which is shown as Fig.~\ref{subnet}. There are 3 different subnets using for services in different layers. And also, 
+these subnet configurations help the step 1 to isolate the public network environment. The subnets named Intranet2 and Intranet3 are the isolated frontend 
 instances. The benefit of this design is isolate the same functions into different partitions. When a part of entire demo are hacked, it is easy 
 to close this part to avoid more damage. The third subnet is the core subnet which is connected with database.
 
@@ -847,6 +798,57 @@ service port connected by instances in the zone A and B. And the outbound allows
 
 After these 3 steps, the network environment isolates all the services very well. It is the fundamental protection.
 
+
+\subsection{Data security}
+
+Data in this demo is mainly in RDS MySQL, which is a kind of data in PaaS service model. There are two tables inclduing "main" and "users". The table "main" 
+stores all of the data needed by the visualisation. The another one stores all of the user's information. There are some steps to ensure the data security.
+
+\subsubsection{Step 1. Identification \& Category}
+
+S3 public data are also used in this demo. Everyone can read this data, so there is no special permission setting in this demo. RDS MySQL provided the authentication 
+by itself. The user and password can be used for the RDS MySQL. Moreover, the password is automatically generated and rotated by a Lambda function. That is a  
+very good practical design in AWS.
+
+For classification, all the data are divided into three kind of data including public original data, imagery data after processing, user data. The most sensitive 
+data is the third one. 
+
+\subsubsection{Step 2. High level policy}
+
+Because the user data stored in RDS is the highly sensitive data in this demo, only the Java instances are allowed to visit it. And the entitlement matrix 
+is shown as Fig.~\ref{matrix}.
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/matrix.png}}
+    \caption{Entitlement matrix}
+    \label{matrix}
+\end{figure}
+
+There are some accurate permission control methods provided by MySQL. The entitlement matrix is made by the MySQL privileges. Admin account is the supper administrator 
+which is managed by the project manager role. It is responsible for the management about database creating and auditing. And also, resource based policies provided 
+by IAM also give a basic data security, which is the role named AWSServiceRoleForRDS allowing the EC2 instance to visit RDS. At the application layer, the guest role 
+have no permission to read the user data. At the data sharing layer, the user data has no need to share, so it does not take it into consideration. At the auditing layer, 
+project manager is responsible for the daily work of the account based auditing.
+
+\subsubsection{Step 3. Encryption}
+
+From the entrance, https is the first consideration of security. Https protocol uses TLS which is a kind of asymmetric encryption, and when the secret key are exchanged, 
+it uses symmetric encryption to transfer data. All of the data can be protected by it. Because this demo has no http domain name, https has not configured.
+
+For the data at rest encryption, RDS can enable the encryption when the database is created. And the key is stored in KMS. It is the cloud handles encryption. Actually, it 
+is not enabled in this demo because there are not any extremely sensitive data like password and so on.
+
+For the data in motion encryption, https is the most useful method between users and this demo. And also, Github Oauth provides a safe method to identify the user. When 
+users follow the Github login url to get the one time code, they send the code to this demo, and this demo will visit Github api with the code by the Oauth2 protocol. All the 
+process are protected by Github design. After the identifying of the user, a session could be stored in server, and generating a new encrypted cookie named JSEESIONID. With is 
+cookie in every following visit, this demo can ensure user login status.
+
+\subsubsection{Step 4. What is more}
+
+Data in this project is not so highly sensitive. For example, S3 data is public for everyone, the calculating data is also public for every authenticated user. Only user 
+information do not allow to be public to everyone. The reasonable security is good for the performance for a internet demo. Generally, after the above steps, the data 
+security would be sufficient, but the devil is in the detail, every step need to be very careful to implement, and make sure that performance does not degrade too much.
+
 \section{Actual AWS expenditure}
 
 Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 accounted for 20 percent. RDS accounted for 30 percent.
@@ -858,14 +860,14 @@ Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 acco
     Implemented all the imagery processing Python code. Implemented all the deployment code. 
     Implemented part of the backend Java code. 
 
-\textbf{Writing contribution includs:} The previous 8 paragraphs of solution summary, and H, I, J, 
-    K subsections in it. The A, E, G subsections of proposed solution. The section of security 
+\textbf{Writing contribution includs:} The previous 8 paragraphs of solution summary, and F, G, H, I, J 
+    subsections in it. The A, E, G subsections of proposed solution. The section of security 
     Considerations. The section of actual AWS expenditure.
 
 \subsection{Huajie Xu} 
 \textbf{Role and Tasks:} FE
 
-\textbf{Writing contribution includs:} 
+\textbf{Writing contribution includs:} The D, E subsections of solution summary. The B section of proposed solution.
 
 \subsection{Shengzhu Wang}
 \textbf{Role and Tasks:} BE. Implemented part of the backend Java code. 
@@ -873,15 +875,18 @@ Totally it spend 70\$. The imagery processing accounted for 50 percent. EC2 acco
 \textbf{Writing contribution includs:} Quit the team early without participating in writing.
 
 \subsection{SiXiang Xiong}
-\textbf{Role and Tasks:} BE, Testing
+\textbf{Role and Tasks:} BE, Testing.
+
 From my perspective, I have study many methods of writing user login and third party login,
 finally learning how to implement the third party login with github as for our website,
 usually we use OAuth2, springboot, then select java to develop, in this project, I help to test
 this website though postman.
-\textbf{Writing contribution includs:} 
+
+\textbf{Writing contribution includs:} The C, F subsections of proposed solution.
 
 \subsection{Wenjie Tong} 
 \textbf{Role and Tasks:} UI designer,Data Researcher, Testing.
+
     In my part of this project, I am playing a role of UI designer,Data Researcher and function 
     tester. 
     Implementing part of the contribution:
