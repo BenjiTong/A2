@@ -1,6 +1,0 @@
----
-
-- name: pls go to data dir to run 'make deploy' to deploy the lambda project
-  shell: "aws lambda list-functions --max-items 10"
- 
-

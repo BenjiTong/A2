@@ -388,7 +388,7 @@ A demo has finished all of tasks following the plan on time in this project. But
 the temporary approaches. It is also possible to deal with the cloud and other disruption to ensure the accrute radiance value. All the 
 other details are described as below.
 
-\subsection{Whole infrastructure}
+\subsection{Whole infrastructure and automatic deployment}
 
 The main architecture is shown as Fig.~\ref{fig2}. First of all, two kinds of IaC platform, which are Ansible and CloudFormation, are used for deployment.
 Ansible is the first choice that can be esily used in most of situations. When some service need to configure complicatedly, CloudFormation is 
@@ -407,6 +407,52 @@ CSS, Vue, Java, JavaScript, Python, Tex. The contributions of team on this demo 
 Java, Python and Vue are the relatively useful tools in this demo. The reason of choosing Java is that almost all of the team members has been good at it. Python 
 has a lot of library processing images, so it is the best choice for geospatial imagery. Vue has powerful frontend capabilities, so it is the best for a 
 visualisation demo. Latex are used to generate the report and slides.
+
+To speed up the development of the demo, automatic deployment has been built from the first day. There are two types of deployment scripts. The first type is shown 
+as Fig.~\ref{ansible}, which is built by Ansible. The entire basic environment can be built from this directory. Below steps can build a clean deployment for this demo.
+
+\begin{itemize}
+    \item Ensure that the local aws-cli configuration is ready to use, i.e running "aws configure".
+    \item Run "ansible-playbook -v -i hosts2 supervisor.yml" to generated a new EC2. Get the IP address.
+    \item Run "ssh -i ~/.ssh/[key] root@[ip]" to login.
+    \item Run "git clone https://github.com/A2/A2.git" to get the code.
+    \item Install the basic requirements and initial part as the README.md under the "deploy" directory.
+    \item When requirements are ready, running "ansible-playbook -v -i hosts site.yml" will deploy the all of the services including Tomcat, Nginx, ELB, Java. 
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/ansible.png}}
+    \caption{Deployment By Ansible}
+    \label{ansible}
+\end{figure}
+
+The second type of deployment is shown as Fig.~\ref{cf1}, which is built by CloudFormation. In Fig.~\ref{cf1}, there are the CloudFormation configuration files. 
+Running "make deploy" in this directory will follow below steps to built the Lambda functions.
+
+\begin{itemize}
+    \item Generate a role named lmdRole and attach various access rights.
+    \item Generate some SQS queue for the Lambda fucntions.
+    \item Define the functions and bind the role, handlers, queues, configurations.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/cf-1.png}}
+    \caption{Deployment of imagery process}
+    \label{cf1}
+\end{figure}
+
+Running "make deploy" in the directory show as Fig.~\ref{cf2}, which is "A2/deploy/roles/mysql/templates", can create a slave RDS MySQL instance. Because 
+a cross-region database replica is needed in this demo, running "make master" can build another master RDS MySQL after changing the aws-cli region. And the 
+slave instance is replicated instantly from the master instance. Both of the commands for MySQL are using CloudFormation. The first one is just a very 
+simple process, but the second one is also generating a Lambda function to rotate the MySQL password in the master database, and store it in Secrets Manager service. 
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics[width=260pt]{images/cf-2.png}}
+    \caption{deployment of MySQL}
+    \label{cf2}
+\end{figure}
+
+After above steps, the entire demo should be ready for processing s3 imagery and users can visit it from the ELB URL.
 
 \subsection{Frontend}
 
