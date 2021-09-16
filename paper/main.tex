@@ -336,34 +336,12 @@ Spring-boot is a Java web framework that can help developer build their web inst
 stand-alone, production-grade application by it \cite{SpringBo66:online}. Because of its features such as no code generation 
 and no requirement for XML configuration, it is the best choose for a Java development team.
 
-\subsection{Oauth github}
-
-GitHub's OAuth implementation supports standard authorization code type or OAuth2 device Authorization
-for apps that do not have access to a web browser. If you want to skip authorizing your app in
-standard method, for example, when testing app, you are able to apply the non-web application flow/
-If you want to create an OAuth Application in GitHub, client will need to log into Github, visit
-the Applications page under your organisation's settings, click Register 'New Application',
-set HomePage URL: Enter the Quay Enterprise URL as the HomePage URL, finally, save your settings by
-clicking the Register application button. An OAuth App could be used as an identity provider by enabling
-a "Login with GitHub" as for the authenticated user. Do not build an OAuth app if you want your
-application to act on a single repository. With the repo OAuth scope, OAuth apps is able to act on
-all of the authenticated user's repositories. If you want to register for OAuth application,
-in the upper-right corner of any page, click your profile photo, then click Setting, in the
-left side bar, click Developer settings, in the left side bar, click OAuth Apps, click New
-OAuth App, in Application Name, type the name of your app.OAuth is a standard that apps can
-use to provide client applications with 'secure delegated access'. OAuth works over HTTPS and
-authorizes devices, APIs, servers, and applications with access tokens rather than credentials,
-such as your client ID, yout client secret key. Nowadays, OAuth2 is the most widely used form of
-OAuth.
-
 \subsection{Ansible}
 
 Ansible is a famous open source deployment platform, which is convenient to enable the infrastructure as code (IaC). 
 It is the main tool to deploy most of the services in this project. Especially, a single EC2 instance with public 
 IP is provided for it. But AWS service has to provision services by aws-cli instead of Ansible itself. There are still 
-some libaries providing these functions but mostly are from external part. Ansible does not require
-a single controlling machine where orchestration begins. Ansible works against multiple systems in your infrastructure
-by selecting portions of Ansible's inventory, stored as edit-able, version-able ASCII text files.
+some libaries providing these functions but mostly are from external part.
 
 \subsection{CloudFormation}
 
@@ -383,6 +361,26 @@ the open source community and internet companies choosing.
 These items are names of services on AWS. Especially, Lambda are used to generate temperary password of RDS, and store it in 
 Secrets Manager. It is really a good method to enhance the security for the password of database. On the other hand, NAT is a 
 good feature for isolating the internal and external networks, but the price is too high to be used all the time in this project.
+
+\subsection{Oauth github}
+
+GitHub's OAuth implementation supports standard authorization code type or OAuth2 device Authorization
+for apps that do not have access to a web browser. If you want to skip authorizing your app in
+standard method, for example, when testing app, you are able to apply the non-web application flow/
+If you want to create an OAuth Application in GitHub, client will need to log into Github, visit
+the Applications page under your organisation's settings, click Register 'New Application',
+set HomePage URL: Enter the Quay Enterprise URL as the HomePage URL, finally, save your settings by
+clicking the Register application button. An OAuth App could be used as an identity provider by enabling
+a "Login with GitHub" as for the authenticated user. Do not build an OAuth app if you want your
+application to act on a single repository. With the repo OAuth scope, OAuth apps is able to act on
+all of the authenticated user's repositories. If you want to register for OAuth application,
+in the upper-right corner of any page, click your profile photo, then click Setting, in the
+left side bar, click Developer settings, in the left side bar, click OAuth Apps, click New
+OAuth App, in Application Name, type the name of your app.OAuth is a standard that apps can
+use to provide client applications with 'secure delegated access'. OAuth works over HTTPS and
+authorizes devices, APIs, servers, and applications with access tokens rather than credentials,
+such as your client ID, yout client secret key. Nowadays, OAuth2 is the most widely used form of
+OAuth.
 
 \section{Proposed solution}
 
@@ -411,19 +409,6 @@ has a lot of library processing images, so it is the best choice for geospatial 
 visualisation demo. Latex are used to generate the report and slides.
 
 \subsection{Frontend}
-The Frontend of this project is consist of two part, for example, login page and homepage.
-we can sign in with github, and then it turn to the third party authentication and the user
-will ask to verify some of their user information like user github account, then we will
-be redirected to A2 Inc homepage, from this website, we are able to see that A2 Inc logo
-is 'do impossible', after that, it have three different regions, for example, New Zealand,
-China and Middle East. which has been marked on the world map. Next, we are allowed to select
-three time modes, for example, Year, Month, Day, which would determine how that line chart
-perform, from the line chart we are able to see that the radiance or pixels of the sampled
-regions vary in every year from 2012 to 2020, the data was based on the World Bank Nighttime
-Light, and stored it in Amazon Web Services. Usually the radiance/pixels line chart is likely
-to vary much more frequent from Year to Day. When mouse move to the graph, Red rectangles
-is possible to turn to Red, which shows the researched area. Blue Rectangles represent some
-place we chose in order to researching data.
 
 \subsubsection{Frontend construction}
  
@@ -935,7 +920,7 @@ finally learning how to implement the third party login with github as for our w
 usually we use OAuth2, springboot, then select java to develop, in this project, I help to test
 this website though postman.
 
-\textbf{Writing contribution includs:} The C, F subsections of proposed solution.
+\textbf{Writing contribution includs:} The K subsection of solution summary. The C, F subsections of proposed solution.
 
 \subsection{Wenjie Tong} 
 \textbf{Role and Tasks:} UI designer,Data Researcher, Testing.
