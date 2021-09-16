@@ -397,15 +397,32 @@ stand-alone, production-grade application by it \cite{SpringBo66:online}. Becaus
 and no requirement for XML configuration, it is the best choose for a Java development team.
 
 \subsection{Oauth github}
-
-this is the explanation
+GitHub's OAuth implementation supports standard authorization code type or OAuth2 device Authorization
+for apps that do not have access to a web browser. If you want to skip authorizing your app in
+standard method, for example, when testing app, you are able to apply the non-web application flow/
+If you want to create an OAuth Application in GitHub, client will need to log into Github, visit
+the Applications page under your organisation's settings, click Register 'New Application',
+set HomePage URL: Enter the Quay Enterprise URL as the HomePage URL, finally, save your settings by
+clicking the Register application button. An OAuth App could be used as an identity provider by enabling
+a "Login with GitHub" as for the authenticated user. Do not build an OAuth app if you want your
+application to act on a single repository. With the repo OAuth scope, OAuth apps is able to act on
+all of the authenticated user's repositories. If you want to register for OAuth application,
+in the upper-right corner of any page, click your profile photo, then click Setting, in the
+left side bar, click Developer settings, in the left side bar, click OAuth Apps, click New
+OAuth App, in Application Name, type the name of your app.OAuth is a standard that apps can
+use to provide client applications with 'secure delegated access'. OAuth works over HTTPS and
+authorizes devices, APIs, servers, and applications with access tokens rather than credentials,
+such as your client ID, yout client secret key. Nowadays, OAuth2 is the most widely used form of
+OAuth.
 
 \subsection{Ansible}
 
 Ansible is a famous open source deployment platform, which is convenient to enable the infrastructure as code (IaC). 
 It is the main tool to deploy most of the services in this project. Especially, a single EC2 instance with public 
 IP is provided for it. But AWS service has to provision services by aws-cli instead of Ansible itself. There are still 
-some libaries providing these functions but mostly are from external part.
+some libaries providing these functions but mostly are from external part. Ansible does not require
+a single controlling machine where orchestration begins. Ansible works against multiple systems in your infrastructure
+by selecting portions of Ansible's inventory, stored as edit-able, version-able ASCII text files.
 
 \subsection{CloudFormation}
 
